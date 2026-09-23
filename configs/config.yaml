@@ -1,0 +1,16 @@
+server:
+  host: "localhost"
+  port: "8080"
+
+db:
+  user: ""
+  password: ""
+  host: ""
+  port: ""
+  name: ""
+  sslmode: "disable"
+
+  # Настройки пула
+  max_open_conns: 25
+  max_idle_conns: 5
+  conn_max_lifetime: "5m"
