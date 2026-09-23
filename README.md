@@ -34,7 +34,7 @@
 1. После команды `git clone` в склонированном проекте удалите файлы go.mod и go.sum;
 2. Создайте новый go.mod со своим названием модуля (`go mod init <ваше_название>`)
 3. Переименуйте часть с названием модуля в импортах на свой:
-	- <ваш_модуль>/interal/config (файлы app/main.go, migrate/main.go, db.go);
-	- <ваш_модуль>/internal/database (файл migrate/main.go).
+	- import "<ваш_модуль>/interal/config" 		// файлы app/main.go, migrate/main.go, db.go
+	- import "<ваш_модуль>/internal/database" 	// файл migrate/main.go
 4. Подгрузите все зависимости командой `go mod tidy`
 
