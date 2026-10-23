@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/coddemn/base-structure-go/internal/api/handler"
 	"github.com/coddemn/base-structure-go/internal/config"
 	"github.com/gin-gonic/gin"
 )
@@ -28,6 +29,8 @@ func main() {
 	//=======================
 	//	INITIALYZE
 	//=======================
+
+	handler := handler.NewHandler()
 
 	httpAddr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
 
@@ -48,6 +51,7 @@ func main() {
 			"message": "Hi from get-access, Demidos!",
 		})
 	})
+	router.GET("/health", handler.Health)
 
 	//===============================
 	//	START SERVER
