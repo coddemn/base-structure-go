@@ -16,6 +16,7 @@ import (
 
 	"github.com/coddemn/base-structure-go/internal/api/handler"
 	"github.com/coddemn/base-structure-go/internal/config"
+	"github.com/coddemn/base-structure-go/internal/database"
 	"github.com/gin-gonic/gin"
 )
 
@@ -38,6 +39,22 @@ func main() {
 	if err != nil {
 		log.Fatalf("load config: %v", err)
 	}
+
+	//======================
+	//	CONNECT TO DB
+	//======================
+
+	ctx := context.Background()
+	db, err := database.New(ctx, cfg.DB)
+	if err != nil {
+		log.Fatalf("open db: %v", err)
+	}
+	defer func() {
+		db.Close()
+		log.Println("db connection is closed")
+	}()
+
+	log.Println("connected to database")
 
 	//=======================
 	//	INITIALYZE
