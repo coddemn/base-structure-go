@@ -17,23 +17,37 @@ RUN rm -rf docs
 RUN go install github.com/swaggo/swag/cmd/swag@v1.8.12
 RUN swag init -g cmd/app/main.go -o docs
 
-# RUN go build -o /bin/app ./cmd/app
-RUN go build -o /bin/migrate ./cmd/migrate
-
-# Собираем статический бинарник
+# Собираем статические бинарники
 RUN CGO_ENABLED=0 GOOS=linux go build \
     -ldflags="-s -w" \
     -o /app/bin/app \
     ./cmd/app
 
-# === Этап 2: финальный образ ===
-FROM alpine:3.20
+RUN CGO_ENABLED=0 GOOS=linux go build \
+    -ldflags="-s -w" \
+    -o /app/bin/migrate \
+    ./cmd/migrate
+
+# === Этап 2: финальный образ для API ===
+FROM alpine:3.20 AS api-image
 
 RUN apk --no-cache add ca-certificates
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
 WORKDIR /app
 
 COPY --from=builder /app/bin/app /app/bin/app
-COPY --from=builder /bin/migrate /bin/migrate
 COPY --from=builder /app/configs /app/configs
-#COPY --from=builder /app/docs /app/docs
+
+# === Этап 3: финальный образ для миграций ===
+FROM alpine:3.20 AS migrate-image
+
+RUN apk --no-cache add ca-certificates
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+WORKDIR /app
+
+COPY --from=builder /app/bin/migrate /app/bin/migrate
+COPY --from=builder /app/configs /app/configs

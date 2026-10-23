@@ -16,8 +16,10 @@ services:
       retries: 5
 
   migrate:
-    build: .
-    command: ["/bin/migrate", "-cmd", "up"]
+    build:
+      context: .
+      target: migrate-image
+    command: ["/app/bin/migrate", "-cmd", "up"]
     env_file: .env.docker
     depends_on:
       db:
@@ -25,7 +27,9 @@ services:
     restart: "no"
 
   api:
-    build: .
+    build:
+      context: .
+      target: api-image
     command: ["/app/bin/app"]
     env_file: .env.docker
     ports:
