@@ -8,6 +8,7 @@ MIGRATE_BIN := bin/migrate
 DOCKER_ENV := .env.docker
 MAIN_GO := cmd/app/main.go
 
+
 # === СПРАВКА ===
 help:
 	@echo "🛠 Доступные цели (используйте make <цель>):"
@@ -24,6 +25,8 @@ help:
 	@echo "  docs               - сгенерировать Swagger-документацию"
 	@echo "  test               - запустить все тесты"
 
+
+
 # === СБОРКА БИНАРНИКОВ ===
 build: build-app build-migrate
 
@@ -34,6 +37,8 @@ build-app:
 build-migrate:
 	@echo "🔨 Сборка бинарника миграций..."
 	go build -o $(MIGRATE_BIN) ./cmd/migrate
+
+
 
 # === ЛОКАЛЬНЫЕ КОМАНДЫ (для разработки на ПК) ===
 migrate-up:
@@ -52,6 +57,8 @@ dev: migrate-up
 	@echo "🚀 Запуск приложения в режиме разработки..."
 	go run ./cmd/app
 
+
+
 # === DOCKER КОМАНДЫ ===
 docker-up:
 	@echo "🐳 Поднимаем окружение в Docker..."
@@ -61,11 +68,15 @@ docker-down:
 	@echo "🛑 Останавливаем Docker-окружение..."
 	docker compose down
 
+
+
 # === ОЧИСТКА ===
 clean:
 	@echo "🧹 Очистка артефактов сборки..."
 	rm -f $(APP_BIN) $(MIGRATE_BIN)
 	rm -rf docs/
+
+
 
 # === ДОКУМЕНТАЦИЯ ===
 # Требует предустановки: go install github.com/swaggo/swag/cmd/swag@v1.8.12
@@ -74,6 +85,9 @@ docs:
 	swag init -g $(MAIN_GO) -o docs
 	@echo "✅ Готово! Документация находится в папке docs/"
 
+
+
+# === Тесты ===
 test:
 	@echo "🧪 Запуск тестов..."
 	go test -v -cover ./...
