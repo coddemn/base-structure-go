@@ -10,11 +10,24 @@ import (
 	"syscall"
 	"time"
 
+	_ "github.com/coddemn/base-structure-go/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/coddemn/base-structure-go/internal/api/handler"
 	"github.com/coddemn/base-structure-go/internal/config"
 	"github.com/gin-gonic/gin"
 )
 
+// @title Base Golang API
+// @version 1.0.0
+// @description Base API-structure template on Go.
+// @termsOfService http://swagger.io/terms/
+// @contact.name API Support
+// @contact.email support@example.com
+// @host localhost:8080
+// @basePath /
+// @schemes http
 func main() {
 
 	//================================
@@ -43,15 +56,31 @@ func main() {
 	}
 
 	//==============================
+	//	MIDDLEWARES
+	//==============================
+
+	router.Use(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Content-Type")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
+
+	//==============================
 	//	ENDPOINTS
 	//==============================
 
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "Hi from get-access, Demidos!",
+			"message": "Hi from base-structure, Demidos!",
 		})
 	})
 	router.GET("/health", handler.Health)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	//===============================
 	//	START SERVER
